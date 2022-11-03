@@ -54,28 +54,28 @@ namespace _2DRPGMAP2
             {
                 for (int y = 0; y < columns; y++)
                 {
-                    //switch(y) //check this
-                    //{
-                    //    case "^":
-                    //        Console.BackgroundColor = ConsoleColor.Gray;
-                    //        break;
-                    //    case '`':
-                    //        Console.BackgroundColor = ConsoleColor.Green;
-                    //        break;
-                    //    case '~':
-                    //        Console.BackgroundColor = ConsoleColor.Blue;
-                    //        break;
-                    //    case '*':
-                    //        Console.BackgroundColor = ConsoleColor.Yellow;
-                    //        break;
-                    //    default:
-                    //        Console.BackgroundColor = ConsoleColor.Black;
-                    //        break;
+                    switch (map[x, y]) //checks the characters in the array and assigns them colours
+                    {
+                        case '^':
+                            Console.BackgroundColor = ConsoleColor.Gray;
+                            break;
+                        case '`':
+                            Console.BackgroundColor = ConsoleColor.Green;
+                            break;
+                        case '~':
+                            Console.BackgroundColor = ConsoleColor.Blue;
+                            break;
+                        case '*':
+                            Console.BackgroundColor = ConsoleColor.Yellow;
+                            break;
+                        default:
+                            Console.BackgroundColor = ConsoleColor.Black;
+                            break;
 
-                    //}
-                    Console.Write(map[x, y]);
+                    }
+                    Console.Write(map[x, y]); //writes the single character located at array index x, y
                 }    
-                Console.WriteLine();
+                Console.WriteLine(); //line breaks when the current row is done being written
             }
 
             Console.ResetColor();
