@@ -48,18 +48,41 @@ namespace _2DRPGMAP2
         }
         static void DisplayMap()
         {
+            Console.BackgroundColor = ConsoleColor.Black;
+
             for (int x = 0; x < rows; x++)
             {
                 for (int y = 0; y < columns; y++)
                 {
+                    //switch(y) //check this
+                    //{
+                    //    case "^":
+                    //        Console.BackgroundColor = ConsoleColor.Gray;
+                    //        break;
+                    //    case '`':
+                    //        Console.BackgroundColor = ConsoleColor.Green;
+                    //        break;
+                    //    case '~':
+                    //        Console.BackgroundColor = ConsoleColor.Blue;
+                    //        break;
+                    //    case '*':
+                    //        Console.BackgroundColor = ConsoleColor.Yellow;
+                    //        break;
+                    //    default:
+                    //        Console.BackgroundColor = ConsoleColor.Black;
+                    //        break;
+
+                    //}
                     Console.Write(map[x, y]);
                 }    
                 Console.WriteLine();
             }
+
+            Console.ResetColor();
         }
         static void DisplayMap(int scale)
         {
 
-        }
+        }        
     }
 }
