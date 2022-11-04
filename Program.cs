@@ -77,9 +77,9 @@ namespace _2DRPGMAP2
                     for (int y = 0; y < columns; y++)
                     {
                         for (int z = 0; z < scale; z++)
-                        {
+                        {                            
                             ColourCode(x, y);
-                            Console.Write(map[x, y]);
+                            Console.Write(map[x, y]);                            
                         }
                     }
                     Console.WriteLine();
