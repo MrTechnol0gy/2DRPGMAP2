@@ -30,7 +30,7 @@ namespace _2DRPGMAP2
     };
         static void Main(string[] args)
         {
-            scale = 1;
+            scale = 3;
             x = 0;
             y = 0;
             origx = Console.CursorLeft;
@@ -44,6 +44,10 @@ namespace _2DRPGMAP2
 
             DisplayMap();
 
+            Console.WriteLine();
+
+            DisplayMap(scale);
+
             Console.ReadKey();
         }
         static void DisplayMap()
@@ -54,25 +58,7 @@ namespace _2DRPGMAP2
             {
                 for (int y = 0; y < columns; y++)
                 {
-                    switch (map[x, y]) //checks the characters in the array and assigns them colours
-                    {
-                        case '^':
-                            Console.BackgroundColor = ConsoleColor.Gray;
-                            break;
-                        case '`':
-                            Console.BackgroundColor = ConsoleColor.Green;
-                            break;
-                        case '~':
-                            Console.BackgroundColor = ConsoleColor.Blue;
-                            break;
-                        case '*':
-                            Console.BackgroundColor = ConsoleColor.Yellow;
-                            break;
-                        default:
-                            Console.BackgroundColor = ConsoleColor.Black;
-                            break;
-
-                    }
+                    ColourCode(x, y);
                     Console.Write(map[x, y]); //writes the single character located at array index x, y
                 }    
                 Console.WriteLine(); //line breaks when the current row is done being written
@@ -82,7 +68,44 @@ namespace _2DRPGMAP2
         }
         static void DisplayMap(int scale)
         {
-
-        }        
+            Console.BackgroundColor = ConsoleColor.Black;
+            
+            for (int x = 0; x < rows; x++)
+            {
+                for (int m = 0; m < scale; m++)
+                {
+                    for (int y = 0; y < columns; y++)
+                    {
+                        for (int z = 0; z < scale; z++)
+                        {
+                            ColourCode(x, y);
+                            Console.Write(map[x, y]);
+                        }
+                    }
+                    Console.WriteLine();
+                }
+            }
+        }
+        static void ColourCode(int x, int y)
+        {
+            switch (map[x, y]) //checks the characters in the array and assigns them colours
+            {
+                case '^':
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    break;
+                case '`':
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    break;
+                case '~':
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    break;
+                case '*':
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    break;
+                default:
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    break;
+            }
+        }
     }
 }
