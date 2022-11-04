@@ -68,8 +68,13 @@ namespace _2DRPGMAP2
         }
         static void DisplayMap(int scale)
         {
+            int bordersize = columns * scale;            
             Console.BackgroundColor = ConsoleColor.Black;
-            
+            for (int r = 0; r < bordersize; r++)
+            {
+                Console.Write("#");
+            }
+            Console.WriteLine();
             for (int x = 0; x < rows; x++)
             {
                 for (int m = 0; m < scale; m++)
@@ -85,6 +90,12 @@ namespace _2DRPGMAP2
                     Console.WriteLine();
                 }
             }
+            Console.BackgroundColor = ConsoleColor.Black;
+            for (int r = 0; r < bordersize; r++)
+            {
+                Console.Write("#");
+            }
+            Console.WriteLine();
         }
         static void ColourCode(int x, int y)
         {
