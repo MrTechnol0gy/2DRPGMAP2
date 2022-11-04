@@ -107,5 +107,9 @@ namespace _2DRPGMAP2
                     break;
             }
         }
+        static void PlayerChoice()
+        {
+
+        }
     }
 }
