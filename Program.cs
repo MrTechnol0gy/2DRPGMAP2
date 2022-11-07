@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace _2DRPGMAP2
 {   
@@ -14,8 +15,8 @@ namespace _2DRPGMAP2
         static int rows, columns;
         static ConsoleKeyInfo key;
         static bool gameOver;
-        static int PlayerPosx;
-        static int PlayerPosy;
+        static int PlayerPosx, PlayerPosy;
+        static int OldPlayerPosy, OldPlayerPosx;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -37,8 +38,8 @@ namespace _2DRPGMAP2
             scale = 3;
             origx = Console.CursorLeft;
             origy = Console.CursorTop;
-            PlayerPosy = origy + 6 * scale;
-            PlayerPosx = origx + 10 * scale;
+            PlayerPosy = origy + 4 * scale;
+            PlayerPosx = origx + 8 * scale;
             p = "P";
             gameOver = false;
             rows = map.GetLength(0);
@@ -46,29 +47,35 @@ namespace _2DRPGMAP2
                       
             while (gameOver == false)
             {
-                DisplayMap(scale);
+                Console.Clear();
+                DisplayMap(scale);                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
+                Console.WriteLine();
+                Console.SetCursorPosition(0, rows * scale + 2);
                 PlayerChoice();                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.ReadKey();
             }
         }
-        //static void DisplayMap()
-        //{
-        //    Console.BackgroundColor = ConsoleColor.Black;
-            
-        //    for (int x = 0; x < rows; x++)
-        //    {
-        //        for (int y = 0; y < columns; y++)
-        //        {
-        //            ColourCode(x, y);
-        //            Console.Write(map[x, y]); //writes the single character located at array index x, y
-        //        }    
-        //        Console.WriteLine(); //line breaks when the current row is done being written
-        //    }
+        static void DisplayMap()
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
 
-        //    Console.ResetColor();
-        //}
+            for (int x = 0; x < rows; x++)
+            {
+                Console.Write("#");
+                for (int y = 0; y < columns; y++)
+                {
+                    ColourCode(x, y);
+                    Console.Write(map[x, y]); //writes the single character located at array index x, y
+                }
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.Write("#");
+                Console.WriteLine(); //line breaks when the current row is done being written
+            }
+
+            Console.ResetColor();
+        }
         static void DisplayMap(int scale)
         {
             int bordersize = columns * scale;            
@@ -78,11 +85,14 @@ namespace _2DRPGMAP2
             {
                 Console.Write("#");
             }            
+
             Console.WriteLine();
+
             for (int x = 0; x < rows; x++)
             {
                 for (int m = 0; m < scale; m++)
                 {
+                    Console.Write("#");
                     for (int y = 0; y < columns; y++)
                     {
                         for (int z = 0; z < scale; z++)
@@ -91,10 +101,12 @@ namespace _2DRPGMAP2
                             Console.Write(map[x, y]);                            
                         }
                     }
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write("#");
                     Console.WriteLine();
-                }
+                }                
             }
-            Console.BackgroundColor = ConsoleColor.Black;
+
             for (int r = -2; r < bordersize; r++)
             {
                 Console.Write("#");
@@ -152,8 +164,8 @@ namespace _2DRPGMAP2
         }
         static void PlayerDraw(string p, int PlayerPosx, int PlayerPosy)
         {
-            int OldPlayerPosx = PlayerPosx;
-            int OldPlayerPosy = PlayerPosy;
+            OldPlayerPosx = PlayerPosx;
+            OldPlayerPosy = PlayerPosy;
             Console.SetCursorPosition(OldPlayerPosx + PlayerPosx, OldPlayerPosy + PlayerPosy);
             Console.Write(p);
         }
