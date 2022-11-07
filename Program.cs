@@ -43,16 +43,14 @@ namespace _2DRPGMAP2
             gameOver = false;
             rows = map.GetLength(0);
             columns = map.GetLength(1);
-
-            //Console.WriteLine("The array is " + rows + " rows tall and " + columns + " columns wide.");
-            //Console.WriteLine();
-            //DisplayMap();
-            //Console.WriteLine();
-
+                      
             while (gameOver == false)
             {
                 DisplayMap(scale);
+                PlayerDraw(p, PlayerPosx, PlayerPosy);
                 PlayerChoice();
+                Console.Clear();
+                DisplayMap(scale);
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.ReadKey();
             }
@@ -90,7 +88,7 @@ namespace _2DRPGMAP2
                     for (int y = 0; y < columns; y++)
                     {
                         for (int z = 0; z < scale; z++)
-                        {                            
+                        {                               
                             ColourCode(x, y);
                             Console.Write(map[x, y]);                            
                         }
