@@ -48,9 +48,7 @@ namespace _2DRPGMAP2
             {
                 DisplayMap(scale);
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
-                PlayerChoice();
-                Console.Clear();
-                DisplayMap(scale);
+                PlayerChoice();                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.ReadKey();
             }
