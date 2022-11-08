@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Security.Cryptography.X509Certificates;
 
 namespace _2DRPGMAP2
 {   
@@ -18,6 +19,7 @@ namespace _2DRPGMAP2
         static int PlayerPosx, PlayerPosy;
         static int OldPlayerPosy, OldPlayerPosx;
         static bool moveRollBack, dungeonMapSwitch;
+        static int dungeonrows, dungeoncolumns;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -57,10 +59,14 @@ namespace _2DRPGMAP2
             origy = Console.CursorTop;
             PlayerPosy = origy + 4 * scale;
             PlayerPosx = origx + 8 * scale;
+            OldPlayerPosx = origx + 4 * scale;
+            OldPlayerPosy = origy + 8 * scale;
             p = "P";
             gameOver = false;
             rows = map.GetLength(0);
             columns = map.GetLength(1);
+            dungeonrows = dungeonmap.GetLength(0);
+            dungeoncolumns = dungeonmap.GetLength(1);
             moveRollBack = false;
             dungeonMapSwitch = false;
                       
@@ -328,8 +334,8 @@ namespace _2DRPGMAP2
                 switch(dungeonmap[y - 1, x - 1])
                 {
                     case '∩':
-                        //PlayerPosx = OldPlayerPosx; //remembers where the player came in so they can leave at the right position on the map
-                        //PlayerPosy = OldPlayerPosy;
+                        PlayerPosx = OldPlayerPosx; //remembers where the player came in so they can leave at the right position on the map
+                        PlayerPosy = OldPlayerPosy;
                         dungeonMapSwitch = false;
                         break;
                     case '█':
@@ -344,8 +350,9 @@ namespace _2DRPGMAP2
                 switch(map[y - 1, x - 1])
                 {
                     case '∩':
-                        //PlayerPosx = OldPlayerPosx;
-                        //PlayerPosy = OldPlayerPosy;
+                        OldPlayerPosx = PlayerPosx;
+                        OldPlayerPosy = PlayerPosy;
+                        GetDungeonEntrance();
                         dungeonMapSwitch = true;
                         break;
                     case '~':
@@ -359,6 +366,24 @@ namespace _2DRPGMAP2
                         break;
                 }
             }
-        }        
+        }      
+        static void GetDungeonEntrance()
+        {
+            for (int x = 0; x < dungeonrows; x++)
+            {
+                for (int y = 0; y < dungeoncolumns; y++)
+                {
+                    switch(dungeonmap[x,y])
+                    {
+                        case '∩':
+                            PlayerPosy = y + 1;
+                            PlayerPosx = x + 1;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+        }
     }
 }
