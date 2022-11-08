@@ -51,7 +51,7 @@ namespace _2DRPGMAP2
                 DisplayMap(scale);                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.WriteLine();
-                Console.SetCursorPosition(0, rows * scale + 2);
+                Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
                 PlayerChoice();                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.ReadKey();
