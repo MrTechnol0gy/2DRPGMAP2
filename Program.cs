@@ -17,7 +17,7 @@ namespace _2DRPGMAP2
         static bool gameOver;
         static int PlayerPosx, PlayerPosy;
         static int OldPlayerPosy, OldPlayerPosx;
-        static bool moveRollBack;
+        static bool moveRollBack, dungeonMapSwitch;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -39,7 +39,7 @@ namespace _2DRPGMAP2
         {
             {'█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█','█' },
             {'█',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
-            {'█',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
+            {'█',' ','∩',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
             {'█',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
             {'█',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
             {'█',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ','█' },
@@ -62,16 +62,30 @@ namespace _2DRPGMAP2
             rows = map.GetLength(0);
             columns = map.GetLength(1);
             moveRollBack = false;
+            dungeonMapSwitch = false;
                       
             while (gameOver == false)
             {
+                if (dungeonMapSwitch == false)
+                {
                 Console.Clear();
                 DisplayMap(scale);                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.WriteLine();
                 Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
                 PlayerChoice();                
-                PlayerDraw(p, PlayerPosx, PlayerPosy);                
+                PlayerDraw(p, PlayerPosx, PlayerPosy);
+                }
+                else
+                {
+                    Console.Clear();                    
+                    DisplayDungeonMap(scale);
+                    PlayerDraw(p, PlayerPosx, PlayerPosy);
+                    Console.WriteLine();
+                    Console.SetCursorPosition(0, rows * scale + 2); //this is wrong
+                    PlayerChoice();
+                    PlayerDraw(p, PlayerPosx, PlayerPosy);
+                }
             }
         }
         static void DisplayMap()
@@ -139,9 +153,79 @@ namespace _2DRPGMAP2
             }
             Console.WriteLine();
         }
+        static void DisplayDungeonMap(int scale)
+        {
+            int bordersize = columns * scale;
+            Console.BackgroundColor = ConsoleColor.Black;
+
+            for (int g = 0; g < 1; g++)
+            {
+                Console.Write("╔");
+                for (int r = 0; r < bordersize; r++)
+                {
+                    Console.Write("═");
+                }
+                Console.Write("╗");
+            }
+
+            Console.WriteLine();
+
+            for (int x = 0; x < rows; x++)
+            {
+                for (int m = 0; m < scale; m++)
+                {
+                    Console.Write("║");
+                    for (int y = 0; y < columns; y++)
+                    {
+                        for (int z = 0; z < scale; z++)
+                        {
+                            ColourCodeDungeon(x, y);
+                            Console.Write(dungeonmap[x, y]);
+                        }
+                    }
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    Console.Write("║");
+                    Console.WriteLine();
+                }
+            }
+            for (int g = 0; g < 1; g++)
+            {
+                Console.Write("╚");
+                for (int r = 0; r < bordersize; r++)
+                {
+                    Console.Write("═");
+                }
+                Console.Write("╝");
+            }
+            Console.WriteLine();
+        }
         static void ColourCode(int x, int y)
         {
             switch (map[x, y]) //checks the characters in the array and assigns them colours
+            {
+                case '^':
+                    Console.BackgroundColor = ConsoleColor.Gray;
+                    break;
+                case '`':
+                    Console.BackgroundColor = ConsoleColor.Green;
+                    break;
+                case '~':
+                    Console.BackgroundColor = ConsoleColor.Blue;
+                    break;
+                case '*':
+                    Console.BackgroundColor = ConsoleColor.Yellow;
+                    break;
+                case '∩':
+                    Console.BackgroundColor = ConsoleColor.DarkGray;
+                    break;
+                default:
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    break;
+            }
+        }
+        static void ColourCodeDungeon(int x, int y)
+        {
+            switch (dungeonmap[x, y]) //checks the characters in the array and assigns them colours
             {
                 case '^':
                     Console.BackgroundColor = ConsoleColor.Gray;
@@ -225,9 +309,7 @@ namespace _2DRPGMAP2
             }
         }
         static void PlayerDraw(string p, int PlayerPosx, int PlayerPosy)
-        {
-            OldPlayerPosx = PlayerPosx;
-            OldPlayerPosy = PlayerPosy;
+        {            
             Console.SetCursorPosition(origx + PlayerPosx, origy + PlayerPosy);
             Console.Write(p);
         }
@@ -241,10 +323,31 @@ namespace _2DRPGMAP2
             {
                 moveRollBack = true;
             }
+            else if (dungeonMapSwitch == true)
+            {
+                switch(dungeonmap[y - 1, x - 1])
+                {
+                    case '∩':
+                        //PlayerPosx = OldPlayerPosx; //remembers where the player came in so they can leave at the right position on the map
+                        //PlayerPosy = OldPlayerPosy;
+                        dungeonMapSwitch = false;
+                        break;
+                    case '█':
+                        moveRollBack = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
             else
             {
                 switch(map[y - 1, x - 1])
-                {                    
+                {
+                    case '∩':
+                        //PlayerPosx = OldPlayerPosx;
+                        //PlayerPosy = OldPlayerPosy;
+                        dungeonMapSwitch = true;
+                        break;
                     case '~':
                         moveRollBack = true;
                         break;
@@ -256,6 +359,6 @@ namespace _2DRPGMAP2
                         break;
                 }
             }
-        }
+        }        
     }
 }
