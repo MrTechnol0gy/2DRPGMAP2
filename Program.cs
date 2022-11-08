@@ -84,7 +84,7 @@ namespace _2DRPGMAP2
 
             for (int r = -2; r < bordersize; r++)
             {
-                Console.Write("#");
+                Console.Write("═");
             }            
 
             Console.WriteLine();
@@ -93,7 +93,7 @@ namespace _2DRPGMAP2
             {
                 for (int m = 0; m < scale; m++)
                 {
-                    Console.Write("#");
+                    Console.Write("║");
                     for (int y = 0; y < columns; y++)
                     {
                         for (int z = 0; z < scale; z++)
@@ -103,14 +103,14 @@ namespace _2DRPGMAP2
                         }
                     }
                     Console.BackgroundColor = ConsoleColor.Black;
-                    Console.Write("#");
+                    Console.Write("║");
                     Console.WriteLine();
                 }                
             }
 
             for (int r = -2; r < bordersize; r++)
             {
-                Console.Write("#");
+                Console.Write("═");
             }
             Console.WriteLine();
         }
@@ -138,7 +138,7 @@ namespace _2DRPGMAP2
         static void PlayerChoice()
         {
             Console.WriteLine();
-            Console.WriteLine("Press 'W' to move North, 'A' to move West, 'S' to move South, or 'D' to move East. Press 'ESC' to Quit.");
+            Console.WriteLine("Press 'W' to move North, 'A' to move West, 'S' to move South, or 'D' to move East. Press 'U' to increase the scale, or 'N' to decrease it. Press 'ESC' to Quit.");
 
             key = Console.ReadKey();
             if (key.Key == ConsoleKey.Escape)
@@ -187,7 +187,14 @@ namespace _2DRPGMAP2
                     PlayerPosx--;
                 }
             }
-
+            else if (key.Key == ConsoleKey.U)
+            {
+                scale++;
+            }
+            else if (key.Key == ConsoleKey.N)
+            {
+                scale--;
+            }
         }
         static void PlayerDraw(string p, int PlayerPosx, int PlayerPosy)
         {
