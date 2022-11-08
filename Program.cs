@@ -17,6 +17,7 @@ namespace _2DRPGMAP2
         static bool gameOver;
         static int PlayerPosx, PlayerPosy;
         static int OldPlayerPosy, OldPlayerPosx;
+        static bool moveRollBack;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -35,7 +36,7 @@ namespace _2DRPGMAP2
     };
         static void Main(string[] args)
         {
-            scale = 3;
+            scale = 1;
             origx = Console.CursorLeft;
             origy = Console.CursorTop;
             PlayerPosy = origy + 4 * scale;
@@ -44,6 +45,7 @@ namespace _2DRPGMAP2
             gameOver = false;
             rows = map.GetLength(0);
             columns = map.GetLength(1);
+            moveRollBack = false;
                       
             while (gameOver == false)
             {
@@ -53,8 +55,7 @@ namespace _2DRPGMAP2
                 Console.WriteLine();
                 Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
                 PlayerChoice();                
-                PlayerDraw(p, PlayerPosx, PlayerPosy);
-                Console.ReadKey();
+                PlayerDraw(p, PlayerPosx, PlayerPosy);                
             }
         }
         static void DisplayMap()
@@ -147,18 +148,44 @@ namespace _2DRPGMAP2
             else if (key.Key == ConsoleKey.W)
             {
                 PlayerPosy--;
+                Console.SetCursorPosition(0, rows * scale + 2);
+                Console.WriteLine("Player position is: " + PlayerPosx + " " + PlayerPosy);
+                WallCheck(PlayerPosx, PlayerPosy);
+                if (moveRollBack == true)
+                {
+                    moveRollBack = false;
+                    PlayerPosy++;
+                }
             }
             else if (key.Key == ConsoleKey.A)
             {
                 PlayerPosx--;
+                WallCheck(PlayerPosx, PlayerPosy);
+                if (moveRollBack == true)
+                {
+                    moveRollBack = false;
+                    PlayerPosx++;
+                }
             }
             else if (key.Key == ConsoleKey.S)
             {
                 PlayerPosy++;
+                WallCheck(PlayerPosx, PlayerPosy);
+                if (moveRollBack == true)
+                {
+                    moveRollBack = false;
+                    PlayerPosy--;
+                }
             }
             else if (key.Key == ConsoleKey.D)
             {
                 PlayerPosx++;
+                WallCheck(PlayerPosx, PlayerPosy);
+                if (moveRollBack == true)
+                {
+                    moveRollBack = false;
+                    PlayerPosx--;
+                }
             }
 
         }
@@ -166,8 +193,34 @@ namespace _2DRPGMAP2
         {
             OldPlayerPosx = PlayerPosx;
             OldPlayerPosy = PlayerPosy;
-            Console.SetCursorPosition(OldPlayerPosx + PlayerPosx, OldPlayerPosy + PlayerPosy);
+            Console.SetCursorPosition(origx + PlayerPosx, origy + PlayerPosy);
             Console.Write(p);
+        }
+        static void WallCheck(int x, int y) //checks to see if the player is allowed to move onto the map location
+        {            
+            if (x > columns || x < 0 + 1) //prevents player from moving outside bounds of border
+            {
+                moveRollBack = true;
+            }
+            else if (y > rows || y < 0 + 1) //prevents player from moving outside bounds of border
+            {
+                moveRollBack = true;
+            }
+            else
+            {
+                switch(map[y - 1, x - 1])
+                {                    
+                    case '~':
+                        moveRollBack = true;
+                        break;
+                    case '^':
+                        moveRollBack = true;
+                        break;
+                    default:
+                        moveRollBack = false;
+                        break;
+                }
+            }
         }
     }
 }
