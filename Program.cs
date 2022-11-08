@@ -82,9 +82,14 @@ namespace _2DRPGMAP2
             int bordersize = columns * scale;            
             Console.BackgroundColor = ConsoleColor.Black;
 
-            for (int r = -2; r < bordersize; r++)
+            for (int g = 0; g < 1; g++)
             {
-                Console.Write("═");
+                Console.Write("╔");
+                for (int r = 0; r < bordersize; r++)
+                {
+                    Console.Write("═");
+                }
+                Console.Write("╗");
             }            
 
             Console.WriteLine();
@@ -107,10 +112,14 @@ namespace _2DRPGMAP2
                     Console.WriteLine();
                 }                
             }
-
-            for (int r = -2; r < bordersize; r++)
+            for (int g = 0; g < 1; g++)
             {
-                Console.Write("═");
+                Console.Write("╚");
+                for (int r = 0; r < bordersize; r++)
+                {
+                    Console.Write("═");
+                }
+                Console.Write("╝");
             }
             Console.WriteLine();
         }
