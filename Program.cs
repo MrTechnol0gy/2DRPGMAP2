@@ -21,6 +21,7 @@ namespace _2DRPGMAP2
         static bool moveRollBack, dungeonMapSwitch;
         static int dungeonrows, dungeoncolumns;
         static int GetPOSx, GetPOSy;
+        static bool firstmaprender, firstdungeonrender;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -62,6 +63,8 @@ namespace _2DRPGMAP2
             PlayerPosx = origx + 8 * scale;
             OldPlayerPosx = origx + 4 * scale;
             OldPlayerPosy = origy + 8 * scale;
+            GetPOSx = 0;
+            GetPOSy = 0;
             p = "P";
             gameOver = false;
             rows = map.GetLength(0);
@@ -70,30 +73,49 @@ namespace _2DRPGMAP2
             dungeoncolumns = dungeonmap.GetLength(1);
             moveRollBack = false;
             dungeonMapSwitch = false;
+            firstdungeonrender = true;
+            firstmaprender = true;
                       
             while (gameOver == false)
             {
+                
                 if (dungeonMapSwitch == false)
                 {
-                Console.Clear();
-                DisplayMap(scale);                
-                PlayerDraw(p, PlayerPosx, PlayerPosy);
-                Console.WriteLine();
-                Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
-                GetPlayerPOS(); //buffering?
-                PlayerChoice();                
-                PlayerDraw(p, PlayerPosx, PlayerPosy);
+                    if (firstmaprender == true)
+                    {
+                        Console.Clear();
+                        DisplayMap(scale);
+                        firstmaprender = false;
+                    }                                    
+                    PlayerDraw(p, PlayerPosx, PlayerPosy);
+                    Console.WriteLine();
+                    Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
+                    GetPlayerPOS(); //gets current player position to be used later to print the map at this location
+                    PlayerChoice();                
+                    PlayerDraw(p, PlayerPosx, PlayerPosy);
+                    Console.SetCursorPosition(GetPOSx, GetPOSy); //prepares the cursor to reprint the map location
+                    ColourCode(GetPOSy - 1, GetPOSx - 1); //prepares the colour for the location to be printed
+                    Console.Write(map[GetPOSy - 1, GetPOSx - 1]); //prints the map location based on the player position
+                    Console.BackgroundColor = ConsoleColor.Black; //resets the background colour after the map print
                 }
                 else
                 {
-                    Console.Clear();                    
-                    DisplayDungeonMap(scale);
+                    if (firstdungeonrender == true)
+                    {
+                        Console.Clear();
+                        DisplayDungeonMap(scale);
+                        firstdungeonrender = false;
+                    }                    
                     PlayerDraw(p, PlayerPosx, PlayerPosy);
                     Console.WriteLine();
                     Console.SetCursorPosition(0, dungeonrows * scale + 2);
-                    GetPlayerPOS(); //buffering?
+                    GetPlayerPOS(); 
                     PlayerChoice();
                     PlayerDraw(p, PlayerPosx, PlayerPosy);
+                    Console.SetCursorPosition(GetPOSx, GetPOSy); //prepares the cursor to reprint the map location
+                    ColourCodeDungeon(GetPOSy - 1, GetPOSx - 1); //prepares the colour for the location to be printed
+                    Console.Write(dungeonmap[GetPOSy - 1, GetPOSx - 1]); //prints the map location based on the player position
+                    Console.BackgroundColor = ConsoleColor.Black; //resets the background colour after the map print
                 }
             }
         }
@@ -281,6 +303,8 @@ namespace _2DRPGMAP2
             else if (key.Key == ConsoleKey.A)
             {
                 PlayerPosx--;
+                Console.SetCursorPosition(0, rows * scale + 2);
+                Console.WriteLine("Player position is: " + PlayerPosx + " " + PlayerPosy);
                 WallCheck(PlayerPosx, PlayerPosy);
                 if (moveRollBack == true)
                 {
@@ -291,6 +315,8 @@ namespace _2DRPGMAP2
             else if (key.Key == ConsoleKey.S)
             {
                 PlayerPosy++;
+                Console.SetCursorPosition(0, rows * scale + 2);
+                Console.WriteLine("Player position is: " + PlayerPosx + " " + PlayerPosy);
                 WallCheck(PlayerPosx, PlayerPosy);
                 if (moveRollBack == true)
                 {
@@ -301,6 +327,8 @@ namespace _2DRPGMAP2
             else if (key.Key == ConsoleKey.D)
             {
                 PlayerPosx++;
+                Console.SetCursorPosition(0, rows * scale + 2);
+                Console.WriteLine("Player position is: " + PlayerPosx + " " + PlayerPosy);
                 WallCheck(PlayerPosx, PlayerPosy);
                 if (moveRollBack == true)
                 {
@@ -340,6 +368,7 @@ namespace _2DRPGMAP2
                         PlayerPosx = OldPlayerPosx; //remembers where the player came in so they can leave at the right position on the map
                         PlayerPosy = OldPlayerPosy;
                         dungeonMapSwitch = false;
+                        firstdungeonrender = true; //flips the switch so when the player comes back into the dungeon it loads the whole thing again
                         break;
                     case '█':
                         moveRollBack = true;
@@ -357,6 +386,7 @@ namespace _2DRPGMAP2
                         OldPlayerPosy = PlayerPosy;
                         GetDungeonEntrance();
                         dungeonMapSwitch = true;
+                        firstmaprender = true; //flips the switch so when the player comes back into the world map it loads the whole thing again
                         break;
                     case '~':
                         moveRollBack = true;
