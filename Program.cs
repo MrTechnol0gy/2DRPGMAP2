@@ -20,6 +20,7 @@ namespace _2DRPGMAP2
         static int OldPlayerPosy, OldPlayerPosx;
         static bool moveRollBack, dungeonMapSwitch;
         static int dungeonrows, dungeoncolumns;
+        static int GetPOSx, GetPOSy;
 
         static char[,] map = new char[,] // dimensions defined by following data:
     {
@@ -79,6 +80,7 @@ namespace _2DRPGMAP2
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 Console.WriteLine();
                 Console.SetCursorPosition(0, rows * scale + 2); //places the cursor below the map for further printouts
+                GetPlayerPOS(); //buffering?
                 PlayerChoice();                
                 PlayerDraw(p, PlayerPosx, PlayerPosy);
                 }
@@ -88,7 +90,8 @@ namespace _2DRPGMAP2
                     DisplayDungeonMap(scale);
                     PlayerDraw(p, PlayerPosx, PlayerPosy);
                     Console.WriteLine();
-                    Console.SetCursorPosition(0, rows * scale + 2); //this is wrong
+                    Console.SetCursorPosition(0, dungeonrows * scale + 2);
+                    GetPlayerPOS(); //buffering?
                     PlayerChoice();
                     PlayerDraw(p, PlayerPosx, PlayerPosy);
                 }
@@ -384,6 +387,11 @@ namespace _2DRPGMAP2
                     }
                 }
             }
+        }
+        static void GetPlayerPOS()
+        {
+            GetPOSx = PlayerPosx;
+            GetPOSy = PlayerPosy;
         }
     }
 }
