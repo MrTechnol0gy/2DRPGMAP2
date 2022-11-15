@@ -441,10 +441,16 @@ namespace _2DRPGMAP2
             else if (key.Key == ConsoleKey.U)
             {
                 scale++;
+                firstdungeonrender = true;
+                firstmaprender = true;
+                firstcastlerender = true;
             }
             else if (key.Key == ConsoleKey.N)
             {
                 scale--;
+                firstdungeonrender = true;
+                firstmaprender = true;
+                firstcastlerender = true;
             }
         }
         static void PlayerDraw(string p, int PlayerPosx, int PlayerPosy)
